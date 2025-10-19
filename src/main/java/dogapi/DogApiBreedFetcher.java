@@ -37,10 +37,9 @@ public class DogApiBreedFetcher implements BreedFetcher {
             String responseBody = response.body().string();
             JSONObject json = new JSONObject(responseBody);
 
-            if (!json.getString("status").equals("success")) {
-                throw new BreedNotFoundException("Breed not found: " + breed);
+            if (!json.getString("status").equals("success") || !json.has("message") || !(json.get("message") instanceof JSONArray)) {
+                throw new BreedNotFoundException(breed);
             }
-
             JSONArray message = json.getJSONArray("message");
             List<String> subBreeds = new ArrayList<>();
 
